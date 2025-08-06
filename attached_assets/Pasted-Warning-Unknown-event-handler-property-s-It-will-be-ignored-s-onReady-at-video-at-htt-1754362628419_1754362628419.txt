@@ -1,0 +1,23 @@
+Warning: Unknown event handler property `%s`. It will be ignored.%s onReady 
+    at video
+    at https://7acdf3f9-fef2-4e8b-8431-b595024dc0da-00-3vdjiqs4shwag.janeway.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/react-player.js?v=29cc8349:54:48
+    at https://7acdf3f9-fef2-4e8b-8431-b595024dc0da-00-3vdjiqs4shwag.janeway.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/react-player.js?v=29cc8349:211:11
+    at Suspense
+    at ForwardChildren (https://7acdf3f9-fef2-4e8b-8431-b595024dc0da-00-3vdjiqs4shwag.janeway.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/react-player.js?v=29cc8349:406:26)
+    at https://7acdf3f9-fef2-4e8b-8431-b595024dc0da-00-3vdjiqs4shwag.janeway.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/react-player.js?v=29cc8349:324:70
+    at div
+    at div
+    at _c (https://7acdf3f9-fef2-4e8b-8431-b595024dc0da-00-3vdjiqs4shwag.janeway.replit.dev/src/components/ui/card.tsx:20:11)
+    at VideoPlayer (https://7acdf3f9-fef2-4e8b-8431-b595024dc0da-00-3vdjiqs4shwag.janeway.replit.dev/src/components/video-player.tsx:24:3)
+    at div
+    at div
+    at div
+    at div
+    at VideoAnalysis (https://7acdf3f9-fef2-4e8b-8431-b595024dc0da-00-3vdjiqs4shwag.janeway.replit.dev/src/pages/video-analysis.tsx:31:35)
+    at Route (https://7acdf3f9-fef2-4e8b-8431-b595024dc0da-00-3vdjiqs4shwag.janeway.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=29cc8349:323:16)
+    at Switch (https://7acdf3f9-fef2-4e8b-8431-b595024dc0da-00-3vdjiqs4shwag.janeway.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=29cc8349:379:17)
+    at Router
+    at Provider (https://7acdf3f9-fef2-4e8b-8431-b595024dc0da-00-3vdjiqs4shwag.janeway.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-GLLPVSZV.js?v=29cc8349:42:15)
+    at TooltipProvider (https://7acdf3f9-fef2-4e8b-8431-b595024dc0da-00-3vdjiqs4shwag.janeway.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-tooltip.js?v=29cc8349:52:5)
+    at QueryClientProvider (https://7acdf3f9-fef2-4e8b-8431-b595024dc0da-00-3vdjiqs4shwag.janeway.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=29cc8349:2805:3)
+    at App

@@ -1,0 +1,179 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: hsl(0, 0%, 100%);
+  --foreground: hsl(0, 0%, 13%);
+  --muted: hsl(0, 0%, 96%);
+  --muted-foreground: hsl(0, 0%, 45%);
+  --popover: hsl(0, 0%, 100%);
+  --popover-foreground: hsl(0, 0%, 13%);
+  --card: hsl(0, 0%, 100%);
+  --card-foreground: hsl(0, 0%, 13%);
+  --border: hsl(0, 0%, 90%);
+  --input: hsl(0, 0%, 90%);
+  --primary: hsl(123, 43%, 33%);
+  --primary-foreground: hsl(0, 0%, 98%);
+  --secondary: hsl(0, 0%, 96%);
+  --secondary-foreground: hsl(0, 0%, 9%);
+  --accent: hsl(0, 0%, 96%);
+  --accent-foreground: hsl(0, 0%, 9%);
+  --destructive: hsl(0, 84%, 60%);
+  --destructive-foreground: hsl(0, 0%, 98%);
+  --ring: hsl(0, 0%, 13%);
+  --radius: 0.5rem;
+  
+  /* Custom Ultimate Frisbee colors */
+  --field-green: hsl(123, 43%, 33%);
+  --sky-blue: hsl(207, 86%, 38%);
+  --highlight-orange: hsl(14, 100%, 56%);
+  --action-green: hsl(122, 39%, 49%);
+  --text-dark: hsl(0, 0%, 13%);
+}
+
+.dark {
+  --background: hsl(240, 10%, 4%);
+  --foreground: hsl(0, 0%, 98%);
+  --muted: hsl(240, 4%, 16%);
+  --muted-foreground: hsl(240, 5%, 65%);
+  --popover: hsl(240, 10%, 4%);
+  --popover-foreground: hsl(0, 0%, 98%);
+  --card: hsl(240, 10%, 4%);
+  --card-foreground: hsl(0, 0%, 98%);
+  --border: hsl(240, 4%, 16%);
+  --input: hsl(240, 4%, 16%);
+  --primary: hsl(123, 43%, 33%);
+  --primary-foreground: hsl(0, 0%, 98%);
+  --secondary: hsl(240, 4%, 16%);
+  --secondary-foreground: hsl(0, 0%, 98%);
+  --accent: hsl(240, 4%, 16%);
+  --accent-foreground: hsl(0, 0%, 98%);
+  --destructive: hsl(0, 63%, 31%);
+  --destructive-foreground: hsl(0, 0%, 98%);
+  --ring: hsl(240, 5%, 84%);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-gray-50 text-foreground;
+    font-family: 'Roboto', 'Open Sans', system-ui, sans-serif;
+  }
+}
+
+/* Custom component styles */
+.video-container {
+  background: #000;
+  position: relative;
+}
+
+.video-controls {
+  background: linear-gradient(0deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 50%, transparent 100%);
+}
+
+.multi-select-dropdown {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.tag-item:hover {
+  background-color: hsl(0, 0%, 96%);
+}
+
+.timestamp-link:hover {
+  color: var(--sky-blue);
+  text-decoration: underline;
+}
+
+/* Custom button variants */
+.btn-field-green {
+  background-color: var(--field-green);
+  color: white;
+}
+
+.btn-field-green:hover {
+  background-color: hsl(123, 43%, 28%);
+}
+
+.btn-sky-blue {
+  background-color: var(--sky-blue);
+  color: white;
+}
+
+.btn-sky-blue:hover {
+  background-color: hsl(207, 86%, 33%);
+}
+
+.btn-highlight-orange {
+  background-color: var(--highlight-orange);
+  color: white;
+}
+
+.btn-highlight-orange:hover {
+  background-color: hsl(14, 100%, 51%);
+}
+
+.btn-action-green {
+  background-color: var(--action-green);
+  color: white;
+}
+
+.btn-action-green:hover {
+  background-color: hsl(122, 39%, 44%);
+}
+
+/* Volume Slider Styles */
+.slider {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.slider::-webkit-slider-track {
+  background: rgba(255, 255, 255, 0.3);
+  height: 4px;
+  border-radius: 2px;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  background: var(--field-green);
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.slider::-webkit-slider-thumb:hover {
+  background: hsl(123, 43%, 28%);
+  transform: scale(1.1);
+}
+
+.slider::-moz-range-track {
+  background: rgba(255, 255, 255, 0.3);
+  height: 4px;
+  border-radius: 2px;
+  border: none;
+}
+
+.slider::-moz-range-thumb {
+  background: var(--field-green);
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease;
+}
+
+.slider::-moz-range-thumb:hover {
+  background: hsl(123, 43%, 28%);
+  transform: scale(1.1);
+}
