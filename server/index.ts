@@ -40,11 +40,14 @@ app.use((req, res, next) => {
   const server = await registerRoutes(app);
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
-    const status = err.status || err.statusCode || 500;
-    const message = err.message || "Internal Server Error";
+    const status = err?.status || err?.statusCode || 500;
+    const message = err?.message || "Internal Server Error";
+
+    // Log full error for serverless logs
+    console.error("Unhandled error:", err);
 
     res.status(status).json({ message });
-    throw err;
+    // Do not re-throw to avoid serverless function crash masking the error
   });
 
   // importantly only setup vite in development and after
