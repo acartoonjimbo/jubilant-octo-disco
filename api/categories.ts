@@ -13,16 +13,16 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
 
   if (req.method === 'GET') {
     res.status(200).json({
-      message: 'Categories endpoint working',
+      message: 'Players endpoint working',
       data: [
-        { id: 1, name: 'Category 1' },
-        { id: 2, name: 'Category 2' }
+        { id: 1, name: 'Player 1', score: 100 },
+        { id: 2, name: 'Player 2', score: 250 }
       ]
     });
   } else if (req.method === 'POST') {
     res.status(201).json({
-      message: 'Category created',
-      data: { id: 3, name: req.body?.name || 'New Category' }
+      message: 'Player created',
+      data: { id: 3, name: req.body?.name || 'New Player', score: 0 }
     });
   } else {
     res.status(405).json({ message: 'Method not allowed' });
