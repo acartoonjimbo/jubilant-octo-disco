@@ -73,11 +73,14 @@ export class MemStorage implements IStorage {
   }
 
   async createCategory(insertCategory: InsertCategory): Promise<Category> {
-    const id = randomUUID();
-    const category: Category = { ...insertCategory, id };
-    this.categories.set(id, category);
-    return category;
-  }
+  const id = randomUUID();
+  const categoryWithId = { ...insertCategory, id };
+  const [category] = await db
+    .insert(categories)
+    .values(categoryWithId)
+    .returning();
+  return category;
+}
 
   async updateCategory(id: string, updateData: Partial<InsertCategory>): Promise<Category | undefined> {
     const category = this.categories.get(id);
@@ -98,11 +101,14 @@ export class MemStorage implements IStorage {
   }
 
   async createPlayer(insertPlayer: InsertPlayer): Promise<Player> {
-    const id = randomUUID();
-    const player: Player = { ...insertPlayer, id };
-    this.players.set(id, player);
-    return player;
-  }
+  const id = randomUUID();
+  const playerWithId = { ...insertPlayer, id };
+  const [player] = await db
+    .insert(players)
+    .values(playerWithId)
+    .returning();
+  return player;
+}
 
   async updatePlayer(id: string, updateData: Partial<InsertPlayer>): Promise<Player | undefined> {
     const player = this.players.get(id);
@@ -127,17 +133,20 @@ export class MemStorage implements IStorage {
   }
 
   async createTag(insertTag: InsertTag): Promise<Tag> {
-    const id = randomUUID();
-    const tag: Tag = { 
-      ...insertTag,
-      playerIds: insertTag.playerIds || [],
-      videoUrl: insertTag.videoUrl || null,
-      id, 
-      createdAt: new Date()
-    };
-    this.tags.set(id, tag);
-    return tag;
-  }
+  const id = randomUUID();
+  const tagWithId = { 
+    ...insertTag,
+    playerIds: insertTag.playerIds || [],
+    videoUrl: insertTag.videoUrl || null,
+    id, 
+    createdAt: new Date()
+  };
+  const [tag] = await db
+    .insert(tags)
+    .values(tagWithId)
+    .returning();
+  return tag;
+}
 
   async updateTag(id: string, updateData: Partial<InsertTag>): Promise<Tag | undefined> {
     const tag = this.tags.get(id);
