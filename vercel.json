@@ -2,16 +2,16 @@
   "version": 2,
   "functions": {
     "api/categories.ts": {
-      "runtime": "nodejs20.x"
+       "runtime": "vercel-node@2.0.0"
     },
     "api/players.ts": {
-      "runtime": "nodejs20.x"
+       "runtime": "vercel-node@2.0.0"
     },
     "api/tags.ts": {
-      "runtime": "nodejs20.x"
+      "runtime": "vercel-node@2.0.0"
     },
     "api/test.ts": {
-      "runtime": "nodejs20.x"
+       "runtime": "vercel-node@2.0.0"
     }
   },
   "rewrites": [
