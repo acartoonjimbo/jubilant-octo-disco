@@ -1,16 +1,16 @@
 {
   "functions": {
     "api/categories.ts": {
-      "runtime": "nodejs20.x"
+      "runtime": "@vercel/node@3"
     },
     "api/players.ts": {
-      "runtime": "nodejs20.x"
+      "runtime": "@vercel/node@3"
     },
     "api/tags.ts": {
-      "runtime": "nodejs20.x"
+      "runtime": "@vercel/node@3"
     },
     "api/test.ts": {
-      "runtime": "nodejs20.x"
+      "runtime": "@vercel/node@3"
     }
   },
   "rewrites": [
