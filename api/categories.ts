@@ -16,6 +16,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return;
   }
 
+  if (!supabaseUrl || !supabaseAnonKey) {
+    console.error('Missing Supabase configuration');
+    return res.status(500).json({ error: 'Missing Supabase configuration' });
+  }
+
   const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
   try {
