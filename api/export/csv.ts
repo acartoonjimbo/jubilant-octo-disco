@@ -1,12 +1,11 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import { supabase, TABLES } from '../../lib/supabase';
+import { supabase } from '../../lib/supabase-client';
 
-// Helper function to convert seconds to MM:SS format
-function formatTime(seconds: number): string {
-  const minutes = Math.floor(seconds / 60);
-  const remainingSeconds = seconds % 60;
-  return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
-}
+const TABLES = {
+  TAGS: 'tags',
+  CATEGORIES: 'categories',
+  PLAYERS: 'players'
+};
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Set CORS headers
@@ -33,15 +32,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         description, 
         playerIds, 
         videoUrl, 
-        createAt
+        createdAt
       `)
       .order('timestamp', { ascending: true });
 
-    if (error) {
+    if (error || !Array.isArray(tags)) {
       console.error('Database error:', error);
       return res.status(500).json({ 
         message: 'Database error', 
-        error: error.message 
+        error: error?.message || 'Failed to fetch tags'
       });
     }
 
@@ -51,8 +50,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       supabase.from(TABLES.PLAYERS).select('id, name')
     ]);
 
-    const categories = categoriesResult.data || [];
-    const players = playersResult.data || [];
+    const categories = Array.isArray(categoriesResult.data) ? categoriesResult.data : [];
+    const players = Array.isArray(playersResult.data) ? playersResult.data : [];
 
     // Create lookup maps
     const categoryMap = Object.fromEntries(
@@ -64,31 +63,43 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     // Process data to match CSV export expectations
     const csvData = (tags || []).map(tag => {
-      const playerNames = tag.playerIds 
-        ? tag.playerIds.split(',')
-            .map((id: string) => playerMap[id.trim()] || id.trim())
-            .join(', ')
-        : '';
+      // Defensive: playerIds may be string or array
+      let playerNames = '';
+      if (tag.playerIds) {
+        const idsArray = Array.isArray(tag.playerIds)
+          ? tag.playerIds
+          : typeof tag.playerIds === 'string'
+            ? tag.playerIds.split(',').map(s => s.trim())
+            : [];
+        playerNames = idsArray
+          .map((id: string) => playerMap[id] || id)
+          .join(', ');
+      }
 
       return {
-        timestamp: tag.timestamp,
-        formattedTime: formatTime(tag.timestamp), // MM:SS format
-        category: categoryMap[tag.categoryId] || tag.categoryId,
-        description: tag.description,
+        timestamp: typeof tag.timestamp === 'number' ? tag.timestamp : '',
+        category: categoryMap[tag.categoryId] || tag.categoryId || '',
+        description: tag.description || '',
         players: playerNames,
         videoUrl: tag.videoUrl || '',
-        createdAt: tag.createAt
+        createdAt: tag.createdAt || ''
       };
     });
 
-    // Frontend expects raw array for CSV export
-    return res.status(200).json(csvData);
+    // Convert to CSV
+    const csvHeader = ['timestamp', 'category', 'description', 'players', 'videoUrl', 'createdAt'];
+    const csvRows = [
+      csvHeader.join(','),
+      ...csvData.map(row =>
+        csvHeader.map(key => `"${String(row[key]).replace(/"/g, '""')}"`).join(',')
+      )
+    ];
+    const csvContent = csvRows.join('\n');
 
+    res.setHeader('Content-Type', 'text/csv');
+    res.status(200).send(csvContent);
   } catch (error) {
-    console.error('CSV Export Error:', error);
-    return res.status(500).json({ 
-      message: 'Internal server error',
-      error: error instanceof Error ? error.message : 'Unknown error'
-    });
+    console.error('Export error:', error);
+    res.status(500).json({ message: 'Internal server error', error: String(error) });
   }
 }
