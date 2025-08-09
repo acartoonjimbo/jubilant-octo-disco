@@ -1,18 +1,4 @@
 {
-  "functions": {
-    "api/categories.ts": {
-      "runtime": "@vercel/node@3"
-    },
-    "api/players.ts": {
-      "runtime": "@vercel/node@3"
-    },
-    "api/tags.ts": {
-      "runtime": "@vercel/node@3"
-    },
-    "api/test.ts": {
-      "runtime": "@vercel/node@3"
-    }
-  },
   "rewrites": [
     {
       "source": "/api/(.*)",
