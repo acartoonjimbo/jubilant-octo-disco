@@ -1,130 +1,68 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import { supabase, TABLES } from '../lib/supabase';
+import { createClient } from '@supabase/supabase-js';
+
+const supabaseUrl = process.env.SUPABASE_URL!;
+const supabaseAnonKey = process.env.SUPABASE_ANON_KEY!;
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  // Set CORS headers
+  // Enable CORS
+  res.setHeader('Access-Control-Allow-Credentials', true);
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
+  res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version');
 
   if (req.method === 'OPTIONS') {
     res.status(200).end();
     return;
   }
 
+  const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
   try {
     if (req.method === 'GET') {
-      // Get all tags - return raw array as frontend expects
       const { data, error } = await supabase
-        .from(TABLES.TAGS)
-        .select(`
-          id, 
-          timestamp, 
-          categoryId, 
-          description, 
-          playerIds, 
-          videoUrl, 
-          createAt
-        `)
-        .order('timestamp', { ascending: false }); // Most recent first
+        .from('tags')
+        .select('*')
+        .order('createAt', { ascending: false });
 
       if (error) {
-        console.error('Database error:', error);
-        return res.status(500).json({ 
-          message: 'Database error', 
-          error: error.message 
-        });
+        console.error('Supabase error:', error);
+        return res.status(500).json({ error: error.message });
       }
 
-      // Process the data to match frontend expectations
-      const processedData = (data || []).map(tag => ({
-        id: tag.id,
-        timestamp: tag.timestamp, // Already a number (seconds)
-        categoryId: tag.categoryId,
-        description: tag.description,
-        playerIds: tag.playerIds ? tag.playerIds.split(',') : [], // Convert string to array
-        videoUrl: tag.videoUrl,
-        createdAt: tag.createAt // Note: frontend expects 'createdAt' but DB has 'createAt'
-      }));
-
-      // Frontend expects raw array, not wrapped in { data: ... }
-      return res.status(200).json(processedData);
-
-    } else if (req.method === 'POST') {
-      // Create new tag from form data
-      const { categoryId, description, playerIds, timestamp, videoUrl } = req.body;
-
-      // Validation
-      if (!categoryId || categoryId.trim() === '') {
-        return res.status(400).json({ message: 'Category ID is required' });
-      }
-
-      if (!description || description.trim() === '') {
-        return res.status(400).json({ message: 'Description is required' });
-      }
-
-      if (!Array.isArray(playerIds)) {
-        return res.status(400).json({ message: 'Player IDs must be an array' });
-      }
-
-      if (!timestamp || typeof timestamp !== 'number') {
-        return res.status(400).json({ message: 'Timestamp must be a number (seconds)' });
-      }
-
-      const { data, error } = await supabase
-        .from(TABLES.TAGS)
-        .insert([
-          {
-            id: crypto.randomUUID(), // Generate UUID for id
-            timestamp: timestamp, // Already a number (seconds)
-            categoryId: categoryId.trim(),
-            description: description.trim(),
-            playerIds: playerIds.join(','), // Convert array to comma-separated string
-            videoUrl: videoUrl?.trim() || null,
-            createAt: new Date().toISOString() // Current timestamp
-          }
-        ])
-        .select(`
-          id, 
-          timestamp, 
-          categoryId, 
-          description, 
-          playerIds, 
-          videoUrl, 
-          createAt
-        `)
-        .single();
-
-      if (error) {
-        console.error('Database error:', error);
-        return res.status(500).json({ 
-          message: 'Database error', 
-          error: error.message 
-        });
-      }
-
-      // Process response to match frontend expectations
-      const processedResponse = {
-        id: data.id,
-        timestamp: data.timestamp,
-        categoryId: data.categoryId,
-        description: data.description,
-        playerIds: data.playerIds ? data.playerIds.split(',') : [],
-        videoUrl: data.videoUrl,
-        createdAt: data.createAt
-      };
-
-      return res.status(201).json(processedResponse);
-
-    } else {
-      res.status(405).json({ message: 'Method not allowed' });
+      return res.status(200).json(data);
     }
 
+    if (req.method === 'POST') {
+      const { categoryId, description, playerIds, videoUrl } = req.body;
+
+      if (!categoryId || !description) {
+        return res.status(400).json({ error: 'CategoryId and description are required' });
+      }
+
+      const { data, error } = await supabase
+        .from('tags')
+        .insert([{ 
+          categoryId, 
+          description, 
+          playerIds,
+          videoUrl,
+          timestamp: Math.floor(Date.now() / 1000) // Unix timestamp
+        }])
+        .select();
+
+      if (error) {
+        console.error('Supabase error:', error);
+        return res.status(500).json({ error: error.message });
+      }
+
+      return res.status(201).json(data[0]);
+    }
+
+    res.setHeader('Allow', ['GET', 'POST']);
+    res.status(405).end(`Method ${req.method} Not Allowed`);
   } catch (error) {
-    console.error('API Error:', error);
-    return res.status(500).json({ 
-      message: 'Internal server error',
-      error: error instanceof Error ? error.message : 'Unknown error'
-    });
+    console.error('API error:', error);
+    res.status(500).json({ error: 'Internal server error' });
   }
 }
