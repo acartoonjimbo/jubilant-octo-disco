@@ -3,19 +3,17 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "license": "MIT",
   "engines": {
     "node": ">=20.0.0"
   },
-  {
-  "license": "MIT",
   "scripts": {
     "dev": "tsx server/index.ts",
     "build": "vite build && tsc",
     "start": "node dist/index.js",
     "preview": "vite preview"
-      }
-}
-}endencies": {
+  },
+  "dependencies": {
     "@supabase/supabase-js": "^2.39.0",
     "@vercel/node": "^3.0.21",
     "react": "^18.2.0",
